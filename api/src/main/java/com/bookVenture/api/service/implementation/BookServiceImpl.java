@@ -1,10 +1,15 @@
 package com.bookVenture.api.service.implementation;
 
 import com.bookVenture.api.dto.BookDto;
+import com.bookVenture.api.dto.BookResponse;
+import com.bookVenture.api.exceptions.BookNotFoundException;
 import com.bookVenture.api.models.Book;
 import com.bookVenture.api.repositories.BookRepository;
 import com.bookVenture.api.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,12 +41,52 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> getAllBooks() {
-        List<Book> book = bookRepository.findAll();
-        return book
+    public BookResponse getAllBooks(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<Book> books = bookRepository.findAll(pageable);
+
+        List<Book> listOfBooks = books.getContent();
+
+        List<BookDto> bookDtos = listOfBooks
                 .stream()
                 .map(b -> mapToDto(b))
                 .collect(Collectors.toList());
+        BookResponse bookResponse = new BookResponse();
+        bookResponse.setContent(bookDtos);
+        bookResponse.setPageNo(books.getNumber());
+        bookResponse.setPageSize(books.getSize());
+        bookResponse.setTotalElement(books.getTotalElements());
+        bookResponse.setTotalPages(books.getTotalPages());
+        bookResponse.setLast(books.isLast());
+
+        return bookResponse;
+    }
+
+    @Override
+    public BookDto getBookById(long id) {
+        Book book = bookRepository
+                .findById(id)
+                .orElseThrow(() -> new BookNotFoundException("Book could not be found."));
+        return mapToDto(book);
+    }
+
+    @Override
+    public BookDto updateBook(BookDto bookDto, long id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException("Book could not be found."));
+        book.setType(bookDto.getType());
+        book.setTitle(book.getTitle());
+
+        Book updatedBook = bookRepository.save(book);
+
+        return mapToDto(updatedBook);
+    }
+
+    @Override
+    public void deleteBook(long id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException("Book could not be found."));
+        bookRepository.delete(book);
     }
 
     private BookDto mapToDto(Book book){

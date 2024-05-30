@@ -1,14 +1,12 @@
 package com.bookVenture.api.controllers;
 
 import com.bookVenture.api.dto.BookDto;
-import com.bookVenture.api.models.Book;
+import com.bookVenture.api.dto.BookResponse;
 import com.bookVenture.api.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/")
@@ -21,17 +19,19 @@ public class BookController {
     }
 
     @GetMapping("book")
-    public ResponseEntity<List<BookDto>> getBooks(){
+    public ResponseEntity<BookResponse> getBooks(
+            @RequestParam(value = "page", defaultValue = "0", required = false)int page,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false)int pageSize
+    ){
 
-        return new ResponseEntity<>(bookService.getAllBooks(), HttpStatus.OK);
+        return new ResponseEntity<>(bookService.getAllBooks(page, pageSize), HttpStatus.OK);
     }
 
     @GetMapping("book/{id}")
-    public Book getBookById(@PathVariable long id){
+    public ResponseEntity<BookDto> getBookById(@PathVariable long id){
 
-        Book book = new Book(1, "Davinci Code", "Adventure");
 
-        return book;
+        return ResponseEntity.ok(bookService.getBookById(id));
     }
 
     @PostMapping("book/create")
@@ -41,16 +41,15 @@ public class BookController {
     }
 
     @PutMapping("book/{id}/update")
-    public ResponseEntity<Book> updateBook(@RequestBody Book book, @PathVariable("id") long id){
-        System.out.println(book.getTitle());
-        System.out.println(book.getType());
+    public ResponseEntity<BookDto> updateBook(@RequestBody BookDto bookDto, @PathVariable("id") long id){
+        BookDto response = bookService.updateBook(bookDto, id);
 
-        return ResponseEntity.ok(book);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("book/{id}/delete")
     public ResponseEntity<String> deleteBook(@PathVariable("id") long id){
-        System.out.println(id);
-        return ResponseEntity.ok("Book deleted successfully");
+        bookService.deleteBook(id);
+        return new ResponseEntity<>("Book deleted successfully", HttpStatus.OK);
     }
 }
