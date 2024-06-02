@@ -1,5 +1,3 @@
-Absolutely! Here's the improved markdown document for your BookVenture REST API:
-
 # BookVenture REST API
 
 This is a Java Spring Boot project for a REST API called BookVenture. It provides endpoints for managing authors, books, and reviews.
