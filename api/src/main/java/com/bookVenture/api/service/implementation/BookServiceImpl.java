@@ -2,8 +2,11 @@ package com.bookVenture.api.service.implementation;
 
 import com.bookVenture.api.dto.BookDto;
 import com.bookVenture.api.dto.BookResponse;
+import com.bookVenture.api.exceptions.AuthorNotFoundException;
 import com.bookVenture.api.exceptions.BookNotFoundException;
+import com.bookVenture.api.models.Author;
 import com.bookVenture.api.models.Book;
+import com.bookVenture.api.repositories.AuthorRepository;
 import com.bookVenture.api.repositories.BookRepository;
 import com.bookVenture.api.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,26 +21,25 @@ import java.util.stream.Collectors;
 @Service
 public class BookServiceImpl implements BookService {
     private BookRepository bookRepository;
+    private AuthorRepository authorRepository;
 
     @Autowired
-    public BookServiceImpl(BookRepository bookRepository) {
+    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository) {
         this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
     }
 
     @Override
-    public BookDto createBook(BookDto bookDto) {
-        Book book = new Book();
-        book.setTitle(bookDto.getTitle());
-        book.setType(bookDto.getType());
+    public BookDto createBook(BookDto bookDto, long authorId) {
+        Book book = mapToEntity(bookDto);
+        Author author = authorRepository.findById(authorId)
+            .orElseThrow(() -> new AuthorNotFoundException("Author with associated books not found."));
+        
+        book.setAuthor(author);
 
         Book newBook = bookRepository.save(book);
 
-        BookDto bookResponse = new BookDto();
-        bookResponse.setId(newBook.getId());
-        bookResponse.setTitle(newBook.getTitle());
-        bookResponse.setType(newBook.getType());
-
-        return bookResponse;
+        return mapToDto(newBook);
     }
 
     @Override
@@ -61,21 +63,42 @@ public class BookServiceImpl implements BookService {
 
         return bookResponse;
     }
-
+    
     @Override
-    public BookDto getBookById(long id) {
+    public List<BookDto> getBookByAuthorId(long id) {
+        List<Book> books = bookRepository.findByAuthorId(id);
+
+        return books.stream()
+            .map(book -> mapToDto(book))
+            .collect(Collectors.toList());
+    }
+    
+    @Override
+    public BookDto getBookById(long id, long authorId) {
         Book book = bookRepository
                 .findById(id)
                 .orElseThrow(() -> new BookNotFoundException("Book could not be found."));
+        Author author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new AuthorNotFoundException("Author with associated books not found."));
+        if(book.getAuthor().getId() != author.getId()){
+            throw new BookNotFoundException("This book does not belong to an author");
+        }
         return mapToDto(book);
     }
 
     @Override
-    public BookDto updateBook(BookDto bookDto, long id) {
-        Book book = bookRepository.findById(id)
+    public BookDto updateBook(BookDto bookDto, long bookId, long authorId) {
+
+        Author author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new AuthorNotFoundException("Author with associated books not found."));
+        Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookNotFoundException("Book could not be found."));
+        if(book.getAuthor().getId() != author.getId()){
+            throw new BookNotFoundException("This book does not belong to an author");
+        }
+
         book.setType(bookDto.getType());
-        book.setTitle(book.getTitle());
+        book.setTitle(bookDto.getTitle());
 
         Book updatedBook = bookRepository.save(book);
 
@@ -83,9 +106,15 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void deleteBook(long id) {
+    public void deleteBook(long id, long authorId) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException("Book could not be found."));
+        Author author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new AuthorNotFoundException("Author with associated books not found."));
+        if(book.getAuthor().getId() != author.getId()){
+            throw new BookNotFoundException("This book does not belong to an author");
+        }
+
         bookRepository.delete(book);
     }
 
@@ -104,4 +133,5 @@ public class BookServiceImpl implements BookService {
         book.setType(bookdto.getType());
         return book;
     }
+
 }

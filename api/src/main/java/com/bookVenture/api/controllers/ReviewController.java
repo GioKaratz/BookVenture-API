@@ -13,12 +13,13 @@ import java.util.List;
 @RequestMapping("/api/")
 public class ReviewController {
     private ReviewService reviewService;
+    
     @Autowired
     public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
     }
 
-    @PostMapping("/book/bookId/review")
+    @PostMapping("/book/{bookId}/review")
     public ResponseEntity<ReviewDto> createReview(
             @PathVariable(value = "bookId")int bookId,
             @RequestBody ReviewDto reviewDto){

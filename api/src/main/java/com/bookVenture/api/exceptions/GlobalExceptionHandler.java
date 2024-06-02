@@ -33,4 +33,16 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(AuthorNotFoundException.class)
+    public ResponseEntity<ErrorObject> handleAuthorNotFoundException(AuthorNotFoundException ex,
+                                                                   WebRequest request){
+        ErrorObject errorObject = new ErrorObject();
+
+        errorObject.setStatusCode(HttpStatus.NOT_FOUND.value());
+        errorObject.setMessage(ex.getMessage());
+        errorObject.setTimeStamp(new Date());
+
+        return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.NOT_FOUND);
+    }
 }
