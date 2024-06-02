@@ -1,3 +1,5 @@
+Absolutely! Here's the improved markdown document for your BookVenture REST API:
+
 # BookVenture REST API
 
 This is a Java Spring Boot project for a REST API called BookVenture. It provides endpoints for managing authors, books, and reviews.
@@ -5,85 +7,193 @@ This is a Java Spring Boot project for a REST API called BookVenture. It provide
 ## Controllers
 
 ### AuthorController
+
 - Manages CRUD operations for authors.
 
+#### Example Usage
+
+**Get All Authors:**
+
+```http
+GET /api/author
+```
+
+**Get Author by ID:**
+
+```http
+GET /api/author/{id}
+```
+
+**Create Author:**
+
+```http
+POST /api/author/create
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "nationality": "American",
+  "birthDate": "1990-01-01"
+}
+```
+
+**Update Author:**
+
+```http
+PUT /api/author/{id}
+Content-Type: application/json
+
+{
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "nationality": "British",
+  "birthDate": "1992-02-02"
+}
+```
+
+**Delete Author:**
+
+```http
+DELETE /api/author/{id}
+```
+
 ### BookController
+
 - Manages CRUD operations for books.
 
+#### Example Usage
+
+**Get All Books:**
+
+```http
+GET /api/book?page=0&pageSize=10
+```
+
+**Get Book by ID:**
+
+```http
+GET /api/book/{authorId}/{id}
+```
+
+**Get Books by Author ID:**
+
+```http
+GET /api/book/{authorId}
+```
+
+**Create Book:**
+
+```http
+POST /api/book/create/{authorId}
+Content-Type: application/json
+
+{
+  "title": "Book Title",
+  "type": "Fiction"
+}
+```
+
+**Update Book:**
+
+```http
+PUT /api/book/{id}/update/{authorId}
+Content-Type: application/json
+
+{
+  "title": "Updated Book Title",
+  "type": "Non-fiction"
+}
+```
+
+**Delete Book:**
+
+```http
+DELETE /api/book/{id}/delete/{authorId}
+```
+
 ### ReviewController
+
 - Manages CRUD operations for reviews.
 
-## Models
+#### Example Usage
 
-### Author
-- Represents an author with properties: id, firstName, lastName, nationality, and birthDate.
+**Create Review:**
 
-### Book
-- Represents a book with properties: id, title, type, and an association to an author.
+```http
+POST /api/book/{bookId}/review
+Content-Type: application/json
 
-### Review
-- Represents a review with properties: id, title, content, stars, and an association to a book.
+{
+  "title": "Great Book!",
+  "content": "This book is amazing!",
+  "stars": 5
+}
+```
 
-## DTOs (Data Transfer Objects)
+**Get Reviews by Book ID:**
 
-### AuthorDto
-- DTO for transferring Author data between layers.
+```http
+GET /api/book/{bookId}/reviews
+```
 
-### BookDto
-- DTO for transferring Book data between layers.
+**Get Review by ID:**
 
-### BookResponse
-- DTO for representing paginated lists of books.
+```http
+GET /api/book/{bookId}/reviews/{id}
+```
 
-### ReviewDto
-- DTO for transferring Review data between layers.
+**Update Review:**
 
-## Services
+```http
+PUT /api/book/{bookId}/reviews/{id}
+Content-Type: application/json
 
-### AuthorService
-- Provides service methods for managing authors.
+{
+  "title": "Updated Review Title",
+  "content": "Updated review content.",
+  "stars": 4
+}
+```
 
-### BookService
-- Provides service methods for managing books.
+**Delete Review:**
 
-### ReviewService
-- Provides service methods for managing reviews.
-
-## Repositories
-
-### AuthorRepository
-- Repository interface for managing Author entities.
-
-### BookRepository
-- Repository interface for managing Book entities.
-
-### ReviewRepository
-- Repository interface for managing Review entities.
-
-## Exceptions
-
-### AuthorNotFoundException
-- Thrown when an author is not found.
-
-### BookNotFoundException
-- Thrown when a book is not found.
-
-### ReviewNotFoundException
-- Thrown when a review is not found.
-
-### GlobalExceptionHandler
-- Global exception handler for handling custom exceptions.
+```http
+DELETE /api/book/{bookId}/reviews/{id}
+```
 
 ## Dependencies
 
-- Spring Boot Starter Data JPA
-- Spring Boot Starter Web
-- PostgreSQL Driver
-- Lombok (optional)
-- Spring Boot Starter Test (for testing)
+* Spring Boot Starter Data JPA
+* Spring Boot Starter Web
+* PostgreSQL Driver
+* Lombok (optional)
+* Spring Boot Starter Test (for testing)
 
 ## How to Use
 
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
+**Clone the repository:**
+
+```bash
+git clone <repository-url>
+```
+
+**Navigate to the project directory:**
+
+```bash
+cd <project-directory>
+```
+
+**Build the project:**
+
+```bash
+mvn clean install
+```
+
+**Run the project:**
+
+```bash
+mvn spring-boot:run
+```
+
+**Access the API endpoints using a tool like Postman or cURL.**
