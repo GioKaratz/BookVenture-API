@@ -1,8 +1,43 @@
 # BookVenture REST API
 
 BookVenture REST API: Fuel Your Literary Adventure
-BookVenture, a Java Spring Boot-powered REST API, ignites your passion for books. Manage your collection, delve into author information, and explore the world of reviews - all through a user-friendly RESTful interface. Embark on your literary adventure today!
+BookVenture, a Java Spring Boot-powered REST API built as a Maven project, ignites your passion for books. Manage your collection, delve into author information, and explore the world of reviews - all through a user-friendly RESTful interface. Embark on your literary adventure today!
 ## Controllers
+
+
+### AuthController
+
+- The AuthController handles user authentication and token generation for the BookVenture REST API. It uses JWT (JSON Web Tokens) for securing the endpoints.
+  
+#### Example Usage
+
+**Login:**
+
+This endpoint authenticates a user and returns a JWT token.
+
+```http
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "username": "user@example.com",
+  "password": "password123"
+}
+```
+
+**Register:**
+
+This endpoint create a user.
+
+```http
+POST /api/auth/register
+Content-Type: application/json
+
+{
+  "username": "user@example.com",
+  "password": "password123"
+}
+```
 
 ### AuthorController
 
@@ -165,8 +200,7 @@ DELETE /api/book/{bookId}/reviews/{id}
 * Spring Boot Starter Data JPA
 * Spring Boot Starter Web
 * PostgreSQL Driver
-* Lombok (optional)
-* Spring Boot Starter Test (for testing)
+* Lombok
 
 ## How to Use
 
