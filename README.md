@@ -5,11 +5,10 @@ BookVenture, a Java Spring Boot-powered REST API built as a Maven project, ignit
 
 ## Controllers
 
-
 ### AuthController
 
 - The AuthController handles user authentication and token generation for the BookVenture REST API. It uses JWT (JSON Web Tokens) for securing the endpoints.
-  
+
 #### Example Usage
 
 **Login:**
@@ -21,8 +20,8 @@ POST /api/auth/login
 Content-Type: application/json
 
 {
- "username": "user@example.com",
- "password": "password123"
+  "username": "user@example.com",
+  "password": "password123"
 }
 ```
 
@@ -40,8 +39,8 @@ POST /api/auth/register
 Content-Type: application/json
 
 {
- "username": "user@example.com",
- "password": "password123"
+  "username": "user@example.com",
+  "password": "password123"
 }
 ```
 
@@ -49,7 +48,6 @@ Content-Type: application/json
 
 * Upon successful registration, the response might be a simple success message or a JSON object containing details of the created user.
 * On registration failure, an error response with appropriate status code and message will be provided.
-
 
 ### AuthorController
 
@@ -84,10 +82,10 @@ POST /api/author/create
 Content-Type: application/json
 
 {
- "firstName": "John",
- "lastName": "Doe",
- "nationality": "American",
- "birthDate": "1990-01-01"
+  "firstName": "John",
+  "lastName": "Doe",
+  "nationality": "American",
+  "birthDate": "1990-01-01"
 }
 ```
 
@@ -102,10 +100,10 @@ PUT /api/author/{id}
 Content-Type: application/json
 
 {
- "firstName": "Jane",
- "lastName": "Doe",
- "nationality": "British",
- "birthDate": "1992-02-02"
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "nationality": "British",
+  "birthDate": "1992-02-02"
 }
 ```
 
@@ -122,7 +120,6 @@ DELETE /api/author/{id}
 **Expected Response:**
 
 * This endpoint deletes an author. The response will likely be a simple success message or a status code indicating successful deletion.
-
 
 ### BookController
 
@@ -160,13 +157,14 @@ GET /api/book/{authorId}
 
 * This endpoint retrieves all books written by a specific author. The response will likely be a list of `BookDto` objects, similar to Get All Books but filtered by author.
 
-Absolutely, continuing the breakdown of BookVenture REST API documentation:
-
-**Create Book (continued):**
+**Create Book:**
 
 * Content-Type: application/json
 
-```json
+```http
+POST /api/book/create
+Content-Type: application/json
+
 {
   "title": "Book Title",
   "type": "Fiction"
@@ -202,7 +200,6 @@ DELETE /api/book/{id}/delete/{authorId}
 **Expected Response:**
 
 * This endpoint deletes a book. The response will likely be a simple success message or a status code indicating successful deletion.
-
 
 ### ReviewController
 
@@ -307,6 +304,4 @@ mvn clean install
 mvn spring-boot:run
 ```
 
-**Access the API endpoints using a tool like Postman or cURL.**
-
-This comprehensive breakdown, including expected responses for each endpoint, should provide a clear understanding of the BookVenture REST API functionality documented in the readme.md file.
+**Access the API endpoints using a tool like Postman.**
